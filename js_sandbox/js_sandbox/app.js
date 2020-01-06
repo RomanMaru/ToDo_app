@@ -9,6 +9,9 @@ loadEventListeners()
 
 function loadEventListeners() {
   form.addEventListener('submit', addTask)
+  taskList.addEventListener('click', removeTask)
+  clearBtn.addEventListener('click', clearTasks)
+  filter.addEventListener('keyup', filterTasks)
 }
 
 function addTask(event) {
@@ -19,7 +22,7 @@ function addTask(event) {
   const li = document.createElement('li')
   li.className = 'collection-item'
   li.appendChild(document.createTextNode(taskInput.value))
-  
+
   const link = document.createElement('a')
   link.className = 'delete-item secondary-content'
   link.innerHTML = '<i class="fa fa-remove"></i>'
@@ -28,6 +31,33 @@ function addTask(event) {
   taskList.appendChild(li)
 
   taskInput.value = ''
-  
+
   event.preventDefault()
+}
+
+function removeTask(event) {
+  if (event.target.parentElement.classList.contains('delete-item')) {
+    if (confirm('Are you sure?')) {
+      event.target.parentElement.parentElement.remove()
+    }
+  }
+}
+
+function clearTasks() {
+  while(taskList.firstChild) {
+    taskList.removeChild(taskList.firstChild)
+  }
+}
+
+function filterTasks(event) {
+  const text = event.target.value.toLowerCase()
+
+  document.querySelectorAll('.collection-item').forEach(function(task){
+    const item = task.firstChild.textContent
+    if (item.toLowerCase().indexOf(text) != -1) {
+      task.style.display = 'block'
+    } else {
+      task.style.display = 'none'
+    }
+  })
 }
